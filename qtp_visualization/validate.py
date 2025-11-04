@@ -21,13 +21,13 @@ Q2_INDEX = """<!DOCTYPE html>
 </html>"""
 
 
-def _validate_q2_visualization(files, out_dir):
+def _validate_q2_visualization(qclient, files, out_dir):
     # Magic number 0 -> there is only 1 qzv file
     qzv_fp = files['qzv'][0]
     # If the loader files this is not a correct Qiime 2 visualization. There
     # is no common exception raised, so we catch all of them
     try:
-        q2vis = Visualization.load(qzv_fp)
+        q2vis = Visualization.load(qclient.fetch_file_from_central(qzv_fp))
     except Exception as e:
         return False, None, "Error loading Qiime 2 visualization: %s" % e
 
@@ -57,7 +57,8 @@ def _validate_q2_visualization(files, out_dir):
         f.write(Q2_INDEX % index_name)
 
     # We add the original qzv file so users can download it and play with it
-    filepaths = [(qzv_fp, 'qzv'), (html_fp, 'html_summary'),
+    filepaths = [(qzv_fp, 'qzv'),
+                 (qclient.push_file_to_central(html_fp), 'html_summary'),
                  (html_dir, 'html_summary_dir')]
 
     return True, [ArtifactInfo(None, 'q2_visualization', filepaths)], ""
@@ -95,6 +96,6 @@ def validate(qclient, job_id, parameters, out_dir):
                              % (a_type, ", ".join(sorted(validators))))
 
     # Validate the specific type
-    success, ainfo, error_msg = validators[a_type](files, out_dir)
+    success, ainfo, error_msg = validators[a_type](qclient, files, out_dir)
 
     return success, ainfo, error_msg
