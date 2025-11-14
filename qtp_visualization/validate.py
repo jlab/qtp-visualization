@@ -58,7 +58,7 @@ def _validate_q2_visualization(qclient, files, out_dir):
 
     # We add the original qzv file so users can download it and play with it
     filepaths = [(qzv_fp, 'qzv'),
-                 (qclient.push_file_to_central(html_fp), 'html_summary'),
+                 (html_fp, 'html_summary'),
                  (html_dir, 'html_summary_dir')]
 
     return True, [ArtifactInfo(None, 'q2_visualization', filepaths)], ""
