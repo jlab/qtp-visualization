@@ -45,7 +45,7 @@ class ValidateTests(PluginTestCase):
         # Valid qzv
         valid_qzv = self.deposite_in_qiita_basedir(self.valid_qzv)
         obs_succes, obs_ainfo, obs_error = _validate_q2_visualization(
-            self.qclient, {'qzv': [valid_qzv]}, self.out_dir)
+            {'qzv': [valid_qzv]}, self.out_dir)
         self.assertEqual(obs_error, "")
         self.assertTrue(obs_succes)
         exp_files = [(valid_qzv, 'qzv'),
@@ -57,7 +57,7 @@ class ValidateTests(PluginTestCase):
         # Invalid qzv
         invalid_qzv = self.deposite_in_qiita_basedir(self.invalid_qzv)
         obs_succes, obs_ainfo, obs_error = _validate_q2_visualization(
-            self.qclient, {'qzv': [invalid_qzv]}, self.out_dir)
+            {'qzv': [invalid_qzv]}, self.out_dir)
         self.assertIn("Error loading Qiime 2 visualization:", obs_error)
         self.assertFalse(obs_succes)
         self.assertIsNone(obs_ainfo)
