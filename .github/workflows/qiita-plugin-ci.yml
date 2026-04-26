@@ -145,11 +145,11 @@ jobs:
 
           echo "PRE q2.load" 1>&2
           pwd 1>&2
-          python -c "from qiime2 import Visualization; Visualization.load('/home/runner/work/qtp-visualization/qtp-visualization/qtp_visualization/tests/test_data/bad_vis.qzv');" 1>&2 || true
+          python -c "import qiime2; from qiime2 import Visualization; print(qiime2.__version__); print('FILE SIZE:', os.path.getsize('/home/runner/work/qtp-visualization/qtp-visualization/qtp_visualization/tests/test_data/bad_vis.qzv'), file=sys.stderr); Visualization.load('/home/runner/work/qtp-visualization/qtp-visualization/qtp_visualization/tests/test_data/bad_vis.qzv');" 1>&2 || true
           
           echo "PRE _validate_q2_visualization" 1>&2
           pwd 1>&2
-          python -c "from qtp_visualization.validate import _validate_q2_visualization, validate; obs_succes, obs_ainfo, obs_error = _validate_q2_visualization({'qzv': ['/home/runner/work/qtp-visualization/qtp-visualization/qtp_visualization/tests/test_data/bad_vis.qzv']}, './test1'); print(obs_succes, obs_ainfo, obs_error);" 1>&2 || true
+          python -c "import qiime2; from qtp_visualization.validate import _validate_q2_visualization, validate; print(qiime2.__version__); obs_succes, obs_ainfo, obs_error = _validate_q2_visualization({'qzv': ['/home/runner/work/qtp-visualization/qtp-visualization/qtp_visualization/tests/test_data/bad_vis.qzv']}, './test1'); print(obs_succes, obs_ainfo, obs_error);" 1>&2 || true
           
           echo "NOW pytest" 1>&2
           pytest -s qtp_visualization --doctest-modules --cov=qtp_visualization --cov-report=lcov --ignore=qtp_visualization/data

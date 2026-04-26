@@ -7,9 +7,10 @@
 # -----------------------------------------------------------------------------
 
 from json import loads
-from os.path import join, basename
+from os.path import join, basename, exists, getsize
 import sys
         
+import qiime2
 from qiime2 import Visualization
 from qiita_client import ArtifactInfo
 
@@ -25,7 +26,9 @@ Q2_INDEX = """<!DOCTYPE html>
 def _validate_q2_visualization(files, out_dir):
     # Magic number 0 -> there is only 1 qzv file
     qzv_fp = files['qzv'][0]
-    print("STEFAN entering _validate_q2_visualization qzv_fp=>%s<, files=>%s<, outdir=>%s<" % (qzv_fp, files, out_dir), file=sys.stderr)
+    print("STEFAN entering _validate_q2_visualization qzv_fp=>%s<, files=>%s<, outdir=>%s< qiime version=>%s<" % (qzv_fp, files, out_dir, qiime2.__version__), file=sys.stderr)
+    print("FILE EXISTS:", exists(qzv_fp), file=sys.stderr)
+    print("FILE SIZE:", getsize(qzv_fp), file=sys.stderr)
     # If the loader files this is not a correct Qiime 2 visualization. There
     # is no common exception raised, so we catch all of them
     try:
