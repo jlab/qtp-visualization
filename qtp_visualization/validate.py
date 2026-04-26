@@ -25,6 +25,7 @@ Q2_INDEX = """<!DOCTYPE html>
 def _validate_q2_visualization(files, out_dir):
     # Magic number 0 -> there is only 1 qzv file
     qzv_fp = files['qzv'][0]
+    print("STEFAN entering _validate_q2_visualization qzv_fp=>%s<, files=>%s<, outdir=>%s<" % (qzv_fp, files, out_dir), file=sys.stderr)
     # If the loader files this is not a correct Qiime 2 visualization. There
     # is no common exception raised, so we catch all of them
     try:
