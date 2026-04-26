@@ -59,6 +59,7 @@ class ValidateTests(PluginTestCase):
         import sys
         print("STEFAN: prior invalid test", file=sys.stderr)
         invalid_qzv = self.qclient.push_file_to_central(self.invalid_qzv)
+        invalid_qzv = '/home/runner/work/qtp-visualization/qtp-visualization/qtp_visualization/tests/test_data/bad_vis.qzv'
         print("STEFAN: pushed file %s to %s" % (self.invalid_qzv, invalid_qzv), file=sys.stderr)
         obs_succes, obs_ainfo, obs_error = _validate_q2_visualization(
             {'qzv': [invalid_qzv]}, self.out_dir)
