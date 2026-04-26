@@ -64,7 +64,7 @@ def _validate_q2_visualization(files, out_dir):
     # We add the original qzv file so users can download it and play with it
     filepaths = [(qzv_fp, 'qzv'), (html_fp, 'html_summary'),
                  (html_dir, 'html_summary_dir')]
-    print("STEFAN _vali: >%s< >%s< >%s<" % (True, [ArtifactInfo(None, 'q2_visualization', filepaths)]), file=sys.stderr)
+    print("STEFAN _vali: >%s< >%s< >%s<" % (True, [ArtifactInfo(None, 'q2_visualization', filepaths)], ""), file=sys.stderr)
     return True, [ArtifactInfo(None, 'q2_visualization', filepaths)], ""
 
 
