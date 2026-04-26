@@ -55,6 +55,7 @@ class ValidateTests(PluginTestCase):
         exp_ainfo = [ArtifactInfo(None, 'q2_visualization', exp_files)]
         self.assertEqual(obs_ainfo, exp_ainfo)
 
+    def test_validate_q2_visualization_invalid(self):
         # Invalid qzv
         import sys
         print("STEFAN: prior invalid test", file=sys.stderr)
