@@ -29,6 +29,9 @@ def _validate_q2_visualization(files, out_dir):
     try:
         q2vis = Visualization.load(qzv_fp)
     except Exception as e:
+        import sys
+        print("STEFAN _vali: .load failed with e: %s" % str(e), file=sys.stderr)
+        
         return False, None, "Error loading Qiime 2 visualization: %s" % e
 
     # The visualization in Qiime 2 can contain multiple files and directories.
@@ -49,6 +52,8 @@ def _validate_q2_visualization(files, out_dir):
     # checking here will show a useful error in case that this occurs.
     index_paths = q2vis.get_index_paths()
     if 'html' not in index_paths:
+        print("STEFAN _vali: html not found", file=sys.stderr)
+        
         return (False, None,
                 "Only Qiime 2 visualization with an html index are supported")
 
@@ -59,7 +64,7 @@ def _validate_q2_visualization(files, out_dir):
     # We add the original qzv file so users can download it and play with it
     filepaths = [(qzv_fp, 'qzv'), (html_fp, 'html_summary'),
                  (html_dir, 'html_summary_dir')]
-
+    print("STEFAN _vali: >%s< >%s< >%s<" % (True, [ArtifactInfo(None, 'q2_visualization', filepaths)]), file=sys.stderr)
     return True, [ArtifactInfo(None, 'q2_visualization', filepaths)], ""
 
 
