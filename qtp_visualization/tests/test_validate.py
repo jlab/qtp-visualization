@@ -26,9 +26,10 @@ class ValidateTests(PluginTestCase):
         self.out_dir = mkdtemp()
         self._clean_up_files = [self.out_dir]
 
-        path_builder = partial(join, dirname(__file__), 'test_data')
+        path_builder = partial(join, self.base_data_dir,
+                               dirname(__file__), 'test_data')
         self.valid_qzv = path_builder('good_vis.qzv')
-        self.invalid_qzv = path_builder('bad_vis.qzv')
+        self.invalid_qzv = path_builder('really_bad_vis.qzv')
 
         # Debugging
         sleep(5)
@@ -43,7 +44,7 @@ class ValidateTests(PluginTestCase):
 
     def test_validate_q2_visualization(self):
         # Valid qzv
-        valid_qzv = self.deposite_in_qiita_basedir(self.valid_qzv)
+        valid_qzv = self.qclient.push_file_to_central(self.valid_qzv)
         obs_succes, obs_ainfo, obs_error = _validate_q2_visualization(
             {'qzv': [valid_qzv]}, self.out_dir)
         self.assertEqual(obs_error, "")
@@ -54,10 +55,16 @@ class ValidateTests(PluginTestCase):
         exp_ainfo = [ArtifactInfo(None, 'q2_visualization', exp_files)]
         self.assertEqual(obs_ainfo, exp_ainfo)
 
+    def test_validate_q2_visualization_invalid(self):
         # Invalid qzv
-        invalid_qzv = self.deposite_in_qiita_basedir(self.invalid_qzv)
+        import sys
+        print("STEFAN: prior invalid test", file=sys.stderr)
+        invalid_qzv = self.qclient.push_file_to_central(self.invalid_qzv)
+        invalid_qzv = '/home/runner/work/qtp-visualization/qtp-visualization/qtp_visualization/tests/test_data/really_bad_vis.qzv'
+        print("STEFAN: pushed file %s to %s" % (self.invalid_qzv, invalid_qzv), file=sys.stderr)
         obs_succes, obs_ainfo, obs_error = _validate_q2_visualization(
             {'qzv': [invalid_qzv]}, self.out_dir)
+        print("STEFAN: obs_success=%s, obs_ainfo=%s, obs_error=%s" % (obs_succes, obs_ainfo, obs_error), file=sys.stderr)        
         self.assertIn("Error loading Qiime 2 visualization:", obs_error)
         self.assertFalse(obs_succes)
         self.assertIsNone(obs_ainfo)
@@ -85,7 +92,7 @@ class ValidateTests(PluginTestCase):
         self.assertIsNone(obs_ainfo)
 
         # q2_visualization success
-        valid_qzv = self.deposite_in_qiita_basedir(self.valid_qzv)
+        valid_qzv = self.qclient.push_file_to_central(self.valid_qzv)
         job_id, params = self._create_job('q2_visualization',
                                           {'qzv': [valid_qzv]})
         obs_succes, obs_ainfo, obs_error = validate(

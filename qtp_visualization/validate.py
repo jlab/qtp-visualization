@@ -7,8 +7,10 @@
 # -----------------------------------------------------------------------------
 
 from json import loads
-from os.path import join, basename
-
+from os.path import join, basename, exists, getsize
+import sys
+        
+import qiime2
 from qiime2 import Visualization
 from qiita_client import ArtifactInfo
 
@@ -24,11 +26,16 @@ Q2_INDEX = """<!DOCTYPE html>
 def _validate_q2_visualization(files, out_dir):
     # Magic number 0 -> there is only 1 qzv file
     qzv_fp = files['qzv'][0]
+    print("STEFAN entering _validate_q2_visualization qzv_fp=>%s<, files=>%s<, outdir=>%s< qiime version=>%s<" % (qzv_fp, files, out_dir, qiime2.__version__), file=sys.stderr)
+    print("FILE EXISTS:", exists(qzv_fp), file=sys.stderr)
+    print("FILE SIZE:", getsize(qzv_fp), file=sys.stderr)
     # If the loader files this is not a correct Qiime 2 visualization. There
     # is no common exception raised, so we catch all of them
     try:
         q2vis = Visualization.load(qzv_fp)
     except Exception as e:
+        print("STEFAN _vali: .load failed with e: %s" % str(e), file=sys.stderr)
+        
         return False, None, "Error loading Qiime 2 visualization: %s" % e
 
     # The visualization in Qiime 2 can contain multiple files and directories.
@@ -49,6 +56,8 @@ def _validate_q2_visualization(files, out_dir):
     # checking here will show a useful error in case that this occurs.
     index_paths = q2vis.get_index_paths()
     if 'html' not in index_paths:
+        print("STEFAN _vali: html not found", file=sys.stderr)
+        
         return (False, None,
                 "Only Qiime 2 visualization with an html index are supported")
 
@@ -59,7 +68,7 @@ def _validate_q2_visualization(files, out_dir):
     # We add the original qzv file so users can download it and play with it
     filepaths = [(qzv_fp, 'qzv'), (html_fp, 'html_summary'),
                  (html_dir, 'html_summary_dir')]
-
+    print("STEFAN _vali: >%s< >%s< >%s<" % (True, [ArtifactInfo(None, 'q2_visualization', filepaths)], ""), file=sys.stderr)
     return True, [ArtifactInfo(None, 'q2_visualization', filepaths)], ""
 
 
