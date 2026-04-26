@@ -8,7 +8,8 @@
 
 from json import loads
 from os.path import join, basename
-
+import sys
+        
 from qiime2 import Visualization
 from qiita_client import ArtifactInfo
 
@@ -29,7 +30,6 @@ def _validate_q2_visualization(files, out_dir):
     try:
         q2vis = Visualization.load(qzv_fp)
     except Exception as e:
-        import sys
         print("STEFAN _vali: .load failed with e: %s" % str(e), file=sys.stderr)
         
         return False, None, "Error loading Qiime 2 visualization: %s" % e
